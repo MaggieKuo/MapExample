@@ -11,6 +11,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -21,7 +23,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -97,9 +101,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         LatLng taipei101 = new LatLng(25.033408,121.564099);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(taipei101, 15));
-        mMap.addMarker(new MarkerOptions()
-        .position(taipei101)
-        .title("101"));
+        Marker marker101 = mMap.addMarker(new MarkerOptions()
+                .position(taipei101)
+                .title("101")
+                .snippet("這裡是台北101")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.bobble))
+        );
+
+        marker101.showInfoWindow();
+
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+
+/*
+                View view = getLayoutInflater().inflate(R.layout.info_window, null);
+                TextView title = (TextView) view.findViewById(R.id.info_title);
+                TextView snippet = (TextView) view.findViewById(R.id.info_snippet);
+                title.setText(marker.getTitle());
+                snippet.setText(marker.getSnippet());
+                return view;
+*/
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                View view = getLayoutInflater().inflate(R.layout.info_window, null);
+                TextView title = (TextView) view.findViewById(R.id.info_title);
+                TextView snippet = (TextView) view.findViewById(R.id.info_snippet);
+                title.setText(marker.getTitle());
+                snippet.setText(marker.getSnippet());
+                return view;
+            }
+        });
+
 
    }
 
@@ -150,6 +186,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //noinspection MissingPermission
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, locationRequest, this);
+*/
         //noinspection MissingPermission
         Location location = LocationServices.FusedLocationApi
                 .getLastLocation(mGoogleApiClient);
@@ -161,7 +198,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             new LatLng(location.getLatitude(),
                                         location.getLongitude()),
                             15));
-        }*/
+        }
     }
 
     @Override
